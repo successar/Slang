@@ -31,7 +31,7 @@ void Program_class::cgen(ofstream& os) {
 	os << "main:" << endl;
 	os << MOVE << FP << ",\t" << SP << endl;
 	os << ADDIU << SP << ",\t" << SP << ",\t" << -(vtbl.size() * WORD_SIZE) << endl; 
-	root_blk->cgen(os);
+	//root_blk->cgen(os);
 	os << RET << endl;
 	os << "#End of code" << endl;
 }

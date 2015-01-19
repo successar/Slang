@@ -50,9 +50,11 @@ extern int yydebug;
     THEN = 258,
     ELSE = 259,
     FI = 260,
+    END = 272,
     INT_CONST = 261,
     OBJECTID = 265,
     STR_CONST = 271,
+    TYPEID = 273,
     ASSIGN = 263,
     PRINT = 266,
     READ = 267,
@@ -72,9 +74,12 @@ union YYSTYPE
 	Program prg;
 	Expression expr;	
 	Block blk_expr;
+	Formals forms;
+	Function fun;
+	VecExpr vec_exp;
 	Symbol symbol;
 
-#line 78 "parser.tab.h" /* yacc.c:1909  */
+#line 83 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

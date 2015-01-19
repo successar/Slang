@@ -9,10 +9,16 @@ using namespace std;
 class Program_class;
 class Block_class;
 class Expression_class;
+class Formals_class;
+class Function_class;
+class Expressions_class;
 
 typedef Program_class* Program;
 typedef Block_class* Block;
 typedef Expression_class* Expression;
+typedef Formals_class* Formals;
+typedef Function_class* Function;
+typedef Expressions_class *VecExpr;
 
 class Expression_class {
 	public:
@@ -34,9 +40,9 @@ class Block_class {
 };
 
 class Program_class {
-	Block root_blk;
+	vector<Function> funcs;
 	public : 
-	Program_class(Block blk) { root_blk = blk; }
+	void append_function(Function f) { funcs.push_back(f); }
 	void display();
 	void semant();
 	void cgen(ofstream& os);
@@ -151,25 +157,52 @@ class Str_const : public Expression_class {
 	int type() { return 's'; }
 };
 
-class Formal {
-	Symbol name;
-	int type;
+class Formals_class {
+	vector<Symbol> args;
+	vector<Symbol> types;
 	public :
-	Formal(Symbol arg_name, int arg_type) : name(arg_name), type(arg_type) {}
+	void append_formal(Symbol name, Symbol type) { args.push_back(name); types.push_back(type); }
+	void display(int l);
 };
 
 class Function_class {
 	Symbol name;
 	Symbol ret_type;
-	vector<Formal> args;
+	Formals args;
+	Block blk;
 	public :
-	Function_class(Symbol arg_name, Symbol arg_ret_type) : name(arg_name), ret_type(arg_ret_type) {}
-	void append_arg(Formal arg) { args.push_back(arg); }
+	Function_class(Symbol arg_name, Symbol arg_ret_type, Formals arg_args, Block arg_blk) 
+		: name(arg_name), ret_type(arg_ret_type), args(arg_args), blk(arg_blk) {}
+	void display(int l);
 };
 
-Program program(Block blk);
+class Expressions_class {
+	vector<Expression> exprs;
+	public: 
+	void append_exp(Expression exp) { exprs.push_back(exp); }
+	void display(int l);
+};
+
+class Call : public Expression_class {
+	Symbol name;
+	VecExpr args;
+	public : 
+	Call(Symbol arg_name, VecExpr arg_args) : name(arg_name), args(arg_args) {}
+	void display(int l);
+};
+
+Program program();
+Block no_block();
 Block single_block(Expression e1);
 Block append_block(Block blk, Expression e1);
+VecExpr no_exp();
+VecExpr single_exp(Expression e1);
+VecExpr append_exp(VecExpr v, Expression e1);
+Function function(Symbol name, Symbol ret_type, Formals args, Block blk);
+Formals single_formal(Symbol name, Symbol type);
+Formals append_formal(Formals f, Symbol name, Symbol type);
+
+Expression call(Symbol name, VecExpr args);
 Expression fbin_op(Expression e1, Expression e2, int op);
 Expression funi_op(Expression e1, int op);
 Expression assign(Symbol var, Expression e1);

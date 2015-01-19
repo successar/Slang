@@ -34,6 +34,7 @@ THENK	[T|t][H|h][E|e][N|n]
 WHILEK	[W|w][H|h][I|i][L|l][E|e]
 LOOPK	[L|l][O|o][O|o][P|p]
 DOK	[D|d][O|o]
+ENDK	[E|e][N|n][D|d]
 
 ASSIGNK	<-
 
@@ -42,6 +43,7 @@ READK	[R|r][e|E][a|A][d|D]
 
 %%
 
+","	 { return (','); }
 "+"      { return ('+'); }
 "-"      { return ('-'); }
 "*"      { return ('*'); }
@@ -67,6 +69,7 @@ READK	[R|r][e|E][a|A][d|D]
 {WHILEK}	  { return WHILE; }
 {LOOPK}		  { return LOOP; }
 {DOK}		  { return DO; }
+{ENDK}		  { return END; }
 
 <INITIAL>{\"  {
  string_buf_ptr = string_buf; 
@@ -182,6 +185,7 @@ BEGIN(INITIAL); }
   
 [0-9]+	 { yylval.symbol = new symtab_entry(yytext)  ; return INT_CONST; }
 [a-z][A-Za-z0-9_]+ { yylval.symbol = new symtab_entry(yytext) ; return OBJECTID; }
+[A-Z][A-Za-z0-9_]+ { yylval.symbol = new symtab_entry(yytext); return TYPEID; }
 
 . { cout << "ERROR : " << yytext; }
 %%

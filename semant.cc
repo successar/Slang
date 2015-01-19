@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 }
 
 void Program_class::semant(){
-	root_blk->check();
+	
 }
 
 void Block_class::check() {

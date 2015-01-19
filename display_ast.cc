@@ -2,11 +2,30 @@
 #include <iostream>
 using namespace std;
 
-void Program_class::display() { root_blk->display(0); }
+void Program_class::display() { 
+	for(int i = 0; i < funcs.size(); i++ ) funcs[i]->display(0); 
+}
 
 void Block_class::display(int l) {
 	for(int i = 0; i < exprs.size(); i++ ) { exprs[i]->display(l); }
 	cout << endl; 
+}
+
+void Function_class::display(int l) {
+	for(int i = 0; i < l; i++) cout << '\t';
+	cout << "Function : " << ret_type->string() << " " << name->string() << " (";
+	args->display(l); cout << ")" << endl;
+	blk->display(l + 1); 
+	for(int i = 0; i < l; i++) cout << '\t';
+	cout << "End Function " << name->string() << endl << endl;
+
+}
+
+void Formals_class::display(int l) {
+	if(args.size() > 0) {	
+	cout << types[0]->string() << " " << args[0]->string() ;
+	for(int i = 1; i < args.size(); i++ ) cout << ", " << types[i]->string() << " " << args[i]->string();
+	}
 }
 
 void bin_op::display(int l) {
@@ -20,6 +39,14 @@ void uni_op::display(int l) {
 	for(int i = 0; i < l; i++) cout << '\t';
 	cout << "Unary op : " << (char) op << endl;
 	e1->display(l + 1);
+}
+
+void Call::display(int l) {
+	for(int i = 0; i < l; i++) cout << '\t';
+	cout << "Function Call : " << name->string() << " Arguments : " << endl;
+	args->display(l + 1);
+	for(int i = 0; i < l; i++) cout << '\t';
+	cout << "End Function Call" << endl;
 }
 
 void Let::display(int l) {
@@ -81,4 +108,8 @@ void Loop::display(int l) {
 void Str_const::display(int l) {
 	for(int i = 0; i < l; i++) cout << '\t';
 	cout << "String : " << value->string() << endl;
+}
+
+void Expressions_class::display(int l) {
+	for(int i = 0; i < exprs.size(); i++ ) exprs[i]->display(l);
 }

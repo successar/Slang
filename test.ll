@@ -1,3 +1,4 @@
+Int main(Int amt) {
 LET a1 <- 0;
 LET a2 <- 1;
 LET a3 <- 0;
@@ -15,4 +16,11 @@ WHILE ( 0 < input ) DO {
 }
 LOOP;
 
+test(23, "wer");
+
 PRINT ("\n");
+} END
+
+Int test(Int lost, String ls) {
+	;
+} END
