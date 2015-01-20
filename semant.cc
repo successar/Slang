@@ -1,13 +1,13 @@
 #include "ast.h"
-#include "Var_table.cc"
 #include <stdio.h>
 using namespace std;
 
 FILE* fin;
 extern Program root;
 extern void yyparse();
-var_table vtbl;
 str_table stbl;
+var_table ftbl;
+var_table* vtbl;
 
 int main(int argc, char** argv) {
 	++argv; --argc;
@@ -21,7 +21,9 @@ int main(int argc, char** argv) {
 }
 
 void Program_class::semant(){
-	
+	for(int i = 0; i < funcs.size(); i++ ) {
+		funcs[i]->check();
+	}
 }
 
 void Block_class::check() {

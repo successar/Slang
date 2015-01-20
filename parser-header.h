@@ -50,17 +50,19 @@ extern int yydebug;
     THEN = 258,
     ELSE = 259,
     FI = 260,
-    END = 272,
-    INT_CONST = 261,
-    OBJECTID = 265,
-    STR_CONST = 271,
-    TYPEID = 273,
-    ASSIGN = 263,
-    PRINT = 266,
-    READ = 267,
-    WHILE = 268,
-    LOOP = 269,
-    DO = 270
+    END = 261,
+    ASSIGN = 262,
+    WHILE = 263,
+    LOOP = 264,
+    DO = 265,
+    INT_CONST = 271,
+    OBJECTID = 272,
+    STR_CONST = 273,
+    TYPEID = 274,
+    PRINT_INT = 281,
+    PRINT_STR = 282,
+    READ_INT = 283,
+    READ_STR = 284
   };
 #endif
 
@@ -79,7 +81,7 @@ union YYSTYPE
 	VecExpr vec_exp;
 	Symbol symbol;
 
-#line 83 "parser.tab.h" /* yacc.c:1909  */
+#line 85 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

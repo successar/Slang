@@ -2,7 +2,6 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "Symbol.h"
 #include "Var_table.cc"
 using namespace std;
 
@@ -121,8 +120,9 @@ class Int_const : public Expression_class {
 
 class Print : public Expression_class {
 	Expression e1;
+	int type;
 	public :
-	Print(Expression arg_e1) : e1(arg_e1) {}
+	Print(Expression arg_e1, int arg_type) : e1(arg_e1), type(arg_type) {}
 	void display(int l);
 	void check();
 	void cgen(ostream& os);
@@ -130,8 +130,9 @@ class Print : public Expression_class {
 
 class Read : public Expression_class {
 	Symbol var;
+	int type;
 	public :
-	Read(Symbol arg_var) : var(arg_var) {}
+	Read(Symbol arg_var, int arg_type) : var(arg_var), type(arg_type) {}
 	void display(int l);
 	void check();
 	void cgen(ostream& os);
@@ -162,7 +163,10 @@ class Formals_class {
 	vector<Symbol> types;
 	public :
 	void append_formal(Symbol name, Symbol type) { args.push_back(name); types.push_back(type); }
+	int size() { return args.size(); }
 	void display(int l);
+	void check();
+	void cgen(ostream& os);
 };
 
 class Function_class {
@@ -170,17 +174,23 @@ class Function_class {
 	Symbol ret_type;
 	Formals args;
 	Block blk;
+	var_table vars;
 	public :
 	Function_class(Symbol arg_name, Symbol arg_ret_type, Formals arg_args, Block arg_blk) 
 		: name(arg_name), ret_type(arg_ret_type), args(arg_args), blk(arg_blk) {}
 	void display(int l);
+	void check();
+	void cgen(ostream& os);
 };
 
 class Expressions_class {
 	vector<Expression> exprs;
 	public: 
 	void append_exp(Expression exp) { exprs.push_back(exp); }
+	int size() { return exprs.size(); }
 	void display(int l);
+	void check();
+	void cgen(ostream& os);
 };
 
 class Call : public Expression_class {
@@ -189,6 +199,8 @@ class Call : public Expression_class {
 	public : 
 	Call(Symbol arg_name, VecExpr arg_args) : name(arg_name), args(arg_args) {}
 	void display(int l);
+	void check();
+	void cgen(ostream& os);
 };
 
 Program program();
@@ -210,7 +222,7 @@ Expression int_const(Symbol var);
 Expression object(Symbol var);
 Expression let(Symbol var, Expression e1);
 Expression cond(Expression cond, Block etrue, Block efalse);
-Expression print(Expression e1);
-Expression read(Symbol var);
+Expression print(Expression e1, int type);
+Expression read(Symbol var, int type);
 Expression loop(Expression e1, Block cond);
 Expression str_const(Symbol value);

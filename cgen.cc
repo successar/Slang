@@ -1,12 +1,19 @@
 #include "ast.h"
-#include "Var_table.cc"
 #include "cgen.h"
 using namespace std;
 
-extern var_table vtbl;
+extern var_table ftbl;
 extern str_table stbl;
+extern var_table* vtbl;
+int curr;
 int ifs = 0;
 int whiles = 0;
+
+int lookup_index(Symbol var) {
+	int index = vtbl->lookup_index(var);
+	if( index < curr ) return index + 3;			
+	else return curr - index;
+}
 
 void code_strings(ofstream& os) {
 	for(int i = 0; i < stbl.size(); i++ ) {
@@ -28,10 +35,9 @@ void Program_class::cgen(ofstream& os) {
 	code_strings(os);
 	os << "\t" << ".text" << endl;
 	os << "\t" << ".globl\tmain" << endl;
-	os << "main:" << endl;
-	os << MOVE << FP << ",\t" << SP << endl;
-	os << ADDIU << SP << ",\t" << SP << ",\t" << -(vtbl.size() * WORD_SIZE) << endl; 
-	//root_blk->cgen(os);
+	for(int i = 0; i < funcs.size(); i++ ) {
+		 funcs[i]->cgen(os);
+	}
 	os << RET << endl;
 	os << "#End of code" << endl;
 }
@@ -73,13 +79,13 @@ void uni_op::cgen(ostream& os) {
 }
 
 void Let::cgen(ostream& os) {
-	int index = vtbl.lookup_index(var);
+	int index = lookup_index(var);
 	e1->cgen(os);
 	store(ACC, index, FP, os);	
 }
 
 void Assign::cgen(ostream& os) {
-	int index = vtbl.lookup_index(var);
+	int index = lookup_index(var);
 	e1->cgen(os);
 	store(ACC, index, FP, os);
 }
@@ -103,14 +109,14 @@ void Int_const::cgen(ostream& os) {
 	os << LI << ACC << ",\t" << str << endl;
 }
 void Object::cgen(ostream& os) {
-	int index = vtbl.lookup_index(var);
+	int index = lookup_index(var);
 	load(ACC, index, FP, os);
 }
 
 void Print::cgen(ostream& os) {
 	e1->cgen(os);
 	push(ACC, os);
-	if( e1->type() == 'i') os << LI << V0 << ",\t" << 1 << endl;
+	if( type == 'i') os << LI << V0 << ",\t" << 1 << endl;
 	else os << LI << V0 << ",\t" << 4 << endl;
 	os << SYSCALL << endl;
 	load(ACC, 1, SP, os);
@@ -120,7 +126,7 @@ void Print::cgen(ostream& os) {
 void Read::cgen(ostream& os) {
 	os << LI << V0 << ",\t" << 5 << endl;
 	os << SYSCALL << endl;
-	int index = vtbl.lookup_index(var);
+	int index = lookup_index(var);
 	store(V0, index, FP, os);
 	os << MOVE << ACC  << ",\t" << V0 << endl;
 }
@@ -141,3 +147,38 @@ void Str_const::cgen(ostream& os) {
 	int index = stbl.lookup_index(value);
 	os << LA << ACC << ",\tstr" << index << endl;
 } 
+
+void Call::cgen(ostream& os) {
+	args->cgen(os);
+	os << JAL << name->string() << endl;
+}
+
+void Function_class::cgen(ostream& os) {
+	vtbl = &vars;
+	curr = args->size();
+	os << name->string() << ":" << endl;
+	push(FP, os);
+	push(RA, os);
+	int local = vtbl->size() - args->size();
+	os << MOVE << FP << ",\t" << SP << endl;
+	os << ADDIU << SP << ",\t" << SP << ",\t" << -(WORD_SIZE * local) << endl;
+	blk->cgen(os);
+	os << ADDIU << SP << ",\t" << SP << ",\t" << (WORD_SIZE * local) << endl;
+	load(RA, 1, SP, os);
+	pop(os);
+	load(FP, 1, SP, os);
+	pop(os);
+	os << ADDIU << SP << ",\t" << SP << ",\t" << (WORD_SIZE * args->size()) << endl;
+	os << RET << endl;
+}
+
+void Expressions_class::cgen(ostream& os) {
+	for(int i = exprs.size() - 1; i >= 0; i-- ) {
+		exprs[i]->cgen(os);
+		push(ACC, os);
+	}
+}
+
+void Formals_class::cgen(ostream& os) {
+}
+

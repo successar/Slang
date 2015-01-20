@@ -38,8 +38,10 @@ ENDK	[E|e][N|n][D|d]
 
 ASSIGNK	<-
 
-PRINTK	[p|P][r|R][i|I][n|N][t|T]
-READK	[R|r][e|E][a|A][d|D]
+PRINT_INTK	[p|P][r|R][i|I][n|N][t|T][_][I|i][N|n][T|t]
+PRINT_STRK	[p|P][r|R][i|I][n|N][t|T][_][S|s][T|t][R|r]
+READ_INTK	[R|r][e|E][a|A][d|D][_][I|i][N|n][T|t]
+READ_STRK	[R|r][e|E][a|A][d|D][_][S|s][T|t][R|r]
 
 %%
 
@@ -64,8 +66,10 @@ READK	[R|r][e|E][a|A][d|D]
 {IFK}             { return IF; }
 {LETK}            { return LET; }
 {THENK}           { return THEN; }
-{READK}           { return READ; }
-{PRINTK}	  { return PRINT; }
+{READ_INTK}       { return READ_INT; }
+{PRINT_INTK}	  { return PRINT_INT; }
+{READ_STRK}       { return READ_STR; }
+{PRINT_STRK}	  { return PRINT_STR; }
 {WHILEK}	  { return WHILE; }
 {LOOPK}		  { return LOOP; }
 {DOK}		  { return DO; }
