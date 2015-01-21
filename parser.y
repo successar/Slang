@@ -35,7 +35,7 @@ Program root = program();
 %type <vec_exp> arg
 
 %right ASSIGN
-%nonassoc '<' '=' 
+%nonassoc '<' '=' '>'
 %left '+' '-'
 %left '*' '/'
 %right '~'
@@ -83,6 +83,7 @@ exp :	OBJECTID '(' args ')' 				{ $$ = call($1, $3); }
 	| exp '/' exp					{ $$ = fbin_op($1, $3, '/'); }
 	| '~' exp					{ $$ = funi_op($2, '~'); }
 	| exp '<' exp					{ $$ = fbin_op($1, $3, '<'); }
+	| exp '>' exp					{ $$ = fbin_op($3, $1, '<'); }
 	| exp '=' exp					{ $$ = fbin_op($1, $3, '='); }
 	| '(' exp ')'					{ $$ = $2; }
 	| OBJECTID					{ $$ = object($1); }

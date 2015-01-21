@@ -9,7 +9,7 @@ parser : ${OBJS}
 	g++ -c -Wno-write-strings -g3 $<
 
 parser-tab.cc : parser.y
-	bison -d parser.y
+	bison -d -v parser.y
 	mv -f parser.tab.c parser-tab.cc
 	mv -f parser.tab.h parser-header.h
 

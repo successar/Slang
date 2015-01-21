@@ -1,25 +1,24 @@
-INT sum(INT i1, INT i2) {
+INT sum(INT i1, INT i2, STR s1) {
 	i1 + i2;
+	PRINT_STR (s1);
 } END
 
 INT main(INT amt) {
-LET a1 <- 0;
-LET a2 <- 1;
-LET a3 <- 0;
+LET a1 <- 1;
 LET input <- 0;
+LET st <- "ret";
 
-PRINT_STR ("Enter the value to fibonacci : ");
+PRINT_STR ("Enter the value to factorial : ");
 READ_INT input;
 
-WHILE ( 0 < input ) DO {
-	PRINT_INT (a3);	
-	PRINT_STR (" ");
-	a1 <- a2;
-	a2 <- a3;
-	a3 <- sum(a1, a2);
+WHILE ( input > 0 ) DO {
+	a1 <- a1 * input;
 	input <- input - 1;
+	PRINT_INT (a1);	
+	PRINT_STR (" ");
 }
 LOOP;
 
 PRINT_STR ("\n");
+sum(a1, input, st);
 } END

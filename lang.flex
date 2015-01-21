@@ -58,6 +58,7 @@ READ_STRK	[R|r][e|E][a|A][d|D][_][S|s][T|t][R|r]
 "}"      { return ('}'); }
 "("      { return ('('); }
 ")"      { return (')'); }
+">"	 { return ('>'); }
 {ASSIGNK} { return ASSIGN; }
 [ \t\r\f\v\n]+ {}
 
