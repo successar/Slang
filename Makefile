@@ -9,7 +9,7 @@ parser : ${OBJS}
 	g++ -c -Wno-write-strings -g3 $<
 
 parser-tab.cc : parser.y
-	bison -d -v parser.y
+	bison -d parser.y
 	mv -f parser.tab.c parser-tab.cc
 	mv -f parser.tab.h parser-header.h
 
@@ -18,4 +18,4 @@ lexer-tab.cc : lang.flex parser-header.h
 	mv -f lex.yy.c lexer-tab.cc
 
 clean :
-	rm slang ${OBJS} parser-tab.cc lexer-tab.cc
+	rm slang ${OBJS} parser-tab.cc lexer-tab.cc *~
