@@ -1,5 +1,6 @@
-SRC = parser-tab.cc lexer-tab.cc display_ast.cc ast.cc Var_table.cc semant.cc semant_checks.cc cgen.cc
-INCL = ast.h Symbol.h parser-header.h
+SRC = parser-tab.cc lexer-tab.cc display_ast.cc ast.cc \
+	Var_table.cc semant.cc semant_checks.cc cgen.cc ast_exp_defs.cc
+INCL = ast.h Symbol.h parser-header.h cgen.h
 OBJS = ${SRC:.cc=.o}
 
 parser : ${OBJS}

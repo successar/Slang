@@ -38,7 +38,9 @@ void Program_class::cgen(ofstream& os) {
 	for(int i = 0; i < funcs.size(); i++ ) {
 		 funcs[i]->cgen(os);
 	}
-	os << RET << endl;
+	code_print_int(os);
+	code_read_int(os);
+	code_print_str(os);
 	os << "#End of code" << endl;
 }
 
@@ -52,7 +54,7 @@ void Expression_class::cgen(ostream& os) {
 	os << SYSCALL << endl;
 }
 
-void bin_op::cgen(ostream& os) {
+void Binary::cgen(ostream& os) {
 	e1->cgen(os);
 	push(ACC, os);
 	e2->cgen(os);
@@ -70,7 +72,7 @@ void bin_op::cgen(ostream& os) {
 	os << ACC << ",\t" << T1 << ",\t" << ACC << endl;
 }
 
-void uni_op::cgen(ostream& os) {
+void Unary::cgen(ostream& os) {
 	e1->cgen(os);
 	switch(op) {
 		case '~' : os << NEG; break;
@@ -111,24 +113,6 @@ void Int_const::cgen(ostream& os) {
 void Object::cgen(ostream& os) {
 	int index = lookup_index(var);
 	load(ACC, index, FP, os);
-}
-
-void Print::cgen(ostream& os) {
-	e1->cgen(os);
-	push(ACC, os);
-	if( type == 'i') os << LI << V0 << ",\t" << 1 << endl;
-	else os << LI << V0 << ",\t" << 4 << endl;
-	os << SYSCALL << endl;
-	load(ACC, 1, SP, os);
-	pop(os);
-}
-
-void Read::cgen(ostream& os) {
-	os << LI << V0 << ",\t" << 5 << endl;
-	os << SYSCALL << endl;
-	int index = lookup_index(var);
-	store(V0, index, FP, os);
-	os << MOVE << ACC  << ",\t" << V0 << endl;
 }
 
 void Loop::cgen(ostream& os) {

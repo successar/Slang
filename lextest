@@ -1,7 +1,0 @@
-main(int argc, char** argv) {
-	++argv; --argc;
-	if( argc > 0 ) yyin = fopen(argv[0], "r");
-	else yyin = stdin;
-	int c;
-	while((c = yylex()) != 0) cout << c << endl;
-}

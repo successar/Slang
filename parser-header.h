@@ -58,11 +58,7 @@ extern int yydebug;
     INT_CONST = 271,
     OBJECTID = 272,
     STR_CONST = 273,
-    TYPEID = 274,
-    PRINT_INT = 281,
-    PRINT_STR = 282,
-    READ_INT = 283,
-    READ_STR = 284
+    TYPEID = 274
   };
 #endif
 
@@ -73,15 +69,15 @@ union YYSTYPE
 {
 #line 14 "parser.y" /* yacc.c:1909  */
 
-	Program prg;
+	Program prog;
 	Expression expr;	
-	Block blk_expr;
-	Formals forms;
-	Function fun;
+	Block block_expr;
+	Formals formals;
+	Function func;
 	VecExpr vec_exp;
 	Symbol symbol;
 
-#line 85 "parser.tab.h" /* yacc.c:1909  */
+#line 81 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

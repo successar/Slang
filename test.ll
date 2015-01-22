@@ -1,24 +1,20 @@
-INT sum(INT i1, INT i2, STR s1) {
-	i1 + i2;
-	PRINT_STR (s1);
+Int fact(Int num) {
+	if ( num = 1 ) then { 1; }
+	else { num * fact(num - 1); }
+	fi;
 } END
 
 INT main(INT amt) {
-LET a1 <- 1;
-LET input <- 0;
-LET st <- "ret";
+LET Int a1 <- 1;
+print_str("Enter the number : ");
+LET Int input <- read_int();
 
-PRINT_STR ("Enter the value to factorial : ");
-READ_INT input;
+print_str("\n");
 
-WHILE ( input > 0 ) DO {
-	a1 <- a1 * input;
-	input <- input - 1;
-	PRINT_INT (a1);	
-	PRINT_STR (" ");
-}
-LOOP;
+a1 <- fact(input);
 
-PRINT_STR ("\n");
-sum(a1, input, st);
+print_str("The factorial is : ");
+print_int(a1);
+print_str("\n");
+
 } END

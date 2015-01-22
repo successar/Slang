@@ -7,6 +7,7 @@
 using namespace std;
 
 extern FILE* fin;
+extern type_table ttbl;
 
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
@@ -38,11 +39,6 @@ ENDK	[E|e][N|n][D|d]
 
 ASSIGNK	<-
 
-PRINT_INTK	[p|P][r|R][i|I][n|N][t|T][_][I|i][N|n][T|t]
-PRINT_STRK	[p|P][r|R][i|I][n|N][t|T][_][S|s][T|t][R|r]
-READ_INTK	[R|r][e|E][a|A][d|D][_][I|i][N|n][T|t]
-READ_STRK	[R|r][e|E][a|A][d|D][_][S|s][T|t][R|r]
-
 %%
 
 ","	 { return (','); }
@@ -67,10 +63,6 @@ READ_STRK	[R|r][e|E][a|A][d|D][_][S|s][T|t][R|r]
 {IFK}             { return IF; }
 {LETK}            { return LET; }
 {THENK}           { return THEN; }
-{READ_INTK}       { return READ_INT; }
-{PRINT_INTK}	  { return PRINT_INT; }
-{READ_STRK}       { return READ_STR; }
-{PRINT_STRK}	  { return PRINT_STR; }
 {WHILEK}	  { return WHILE; }
 {LOOPK}		  { return LOOP; }
 {DOK}		  { return DO; }
@@ -190,7 +182,7 @@ BEGIN(INITIAL); }
   
 [0-9]+	 { yylval.symbol = new symtab_entry(yytext)  ; return INT_CONST; }
 [a-z][A-Za-z0-9_]+ { yylval.symbol = new symtab_entry(yytext) ; return OBJECTID; }
-[A-Z][A-Za-z0-9_]+ { yylval.symbol = new symtab_entry(yytext); return TYPEID; }
+[A-Z][A-Za-z0-9_]+ { yylval.symbol = ttbl.add_type(yytext); return TYPEID; }
 
 . { cout << "ERROR : " << yytext; }
 %%

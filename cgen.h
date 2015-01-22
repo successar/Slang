@@ -1,3 +1,5 @@
+#pragma once
+
 #define WORD_SIZE 4
 #define ZERO "$zero"		// Zero register 
 #define ACC  "$a0"		// Accumulator 
@@ -59,4 +61,51 @@ void push(char* reg, ostream& s) {
 
 void pop(ostream &s) {
 	s << ADDIU << SP << ",\t" << SP << ",\t" << WORD_SIZE << endl;
+}
+
+void code_print_int(ostream& os) {
+	os << "print_int:" << endl;
+	push(FP, os);
+	push(RA, os);
+	os << MOVE << FP << ",\t" << SP << endl;
+	os << LI << V0 << ",\t" << 1 << endl;
+	os << LW << ACC << ",\t" << "12(" << FP << ")" << endl;
+	os << SYSCALL << endl;
+	load(RA, 1, SP, os);
+	pop(os);
+	load(FP, 1, SP, os);
+	pop(os);
+	os << ADDIU << SP << ",\t" << SP << ",\t" << (WORD_SIZE) << endl;
+	os << RET << endl;
+}
+
+void code_print_str(ostream& os) {
+	os << "print_str:" << endl;
+	push(FP, os);
+	push(RA, os);
+	os << MOVE << FP << ",\t" << SP << endl;
+	os << LI << V0 << ",\t" << 4 << endl;
+	os << LW << ACC << ",\t" << "12(" << FP << ")" << endl;
+	os << SYSCALL << endl;
+	load(RA, 1, SP, os);
+	pop(os);
+	load(FP, 1, SP, os);
+	pop(os);
+	os << ADDIU << SP << ",\t" << SP << ",\t" << (WORD_SIZE) << endl;
+	os << RET << endl;
+}
+
+void code_read_int(ostream& os) {
+	os << "read_int:" << endl;
+	push(FP, os);
+	push(RA, os);
+	os << MOVE << FP << ",\t" << SP << endl;
+	os << LI << V0 << ",\t" << 5 << endl;
+	os << SYSCALL << endl;
+	os << MOVE << ACC << ",\t" << V0 << endl;
+	load(RA, 1, SP, os);
+	pop(os);
+	load(FP, 1, SP, os);
+	pop(os);
+	os << RET << endl;
 }
