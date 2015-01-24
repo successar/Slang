@@ -1,20 +1,43 @@
-Int fact(Int num) {
-	if ( num = 1 ) then { 1; }
-	else { num * fact(num - 1); }
-	fi;
-} END
-
 INT main(INT amt) {
-LET Int a1 <- 1;
-print_str("Enter the number : ");
-LET Int input <- read_int();
 
-print_str("\n");
+LET Int a1 <- 0;
+LET Int input <- 0;
 
-a1 <- fact(input);
+LET Int arr[10];
 
-print_str("The factorial is : ");
-print_int(a1);
+while ( a1 < 10 ) DO {
+    print_str("Enter the number : ");
+    input <- read_int();
+    arr[a1] <- input;
+    a1 <- a1 + 1;
+} LOOP;
+print_str("\nSelection Sort : ");
+
+LET Int temp <- 0;
+LET Int a2 <- 0;
+
+while ( a2 < 9 ) DO {
+    a1 <- a2;
+    LET Int minpos <- a2;
+    while ( a1 < 10 ) DO {
+        if ( arr[a1] < arr[minpos] ) THEN {  minpos <- a1; } ELSE { ; } FI;
+        a1 <- a1 + 1;
+    } LOOP;
+
+    temp <- arr[a2];
+    arr[a2] <- arr[minpos];
+    arr[minpos] <- temp;
+
+    a2 <- a2 + 1;
+} LOOP;
+
+a1 <- 0;
+while ( a1 < 10 ) DO {
+    print_str(" ");
+    print_int(arr[a1]);
+    a1 <- a1 + 1;
+} LOOP;
+
 print_str("\n");
 
 } END

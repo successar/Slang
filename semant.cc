@@ -11,36 +11,40 @@ var_table* vtbl;
 type_table ttbl;
 
 int main(int argc, char** argv) {
-	++argv; --argc;
+    ++argv;
+    --argc;
 
-	ttbl.add_type("Str");
-	ttbl.add_type("Int");
+    ttbl.add_type("Str");
+    ttbl.add_type("Int");
 
-	Symbol print_int = new symtab_entry("print_int");
-	ftbl.add_var(print_int, ttbl.lookup_type("Int"));
+    Symbol print_int = new symtab_entry("print_int");
+    ftbl.add_var(print_int, ttbl.lookup_type("Int"));
 
-	Symbol print_str = new symtab_entry("print_str");
-	ftbl.add_var(print_int, ttbl.lookup_type("Str"));
+    Symbol print_str = new symtab_entry("print_str");
+    ftbl.add_var(print_int, ttbl.lookup_type("Str"));
 
-	Symbol read_int = new symtab_entry("read_str");
-	ftbl.add_var(print_int, ttbl.lookup_type("Int"));
-	
-	if( argc > 0 ) fin = fopen(argv[0], "r");
-	else fin = stdin;
-	ofstream os("out.s");
-	yyparse();
-	root->semant();
-	root->display();
-	root->cgen(os);
+    Symbol read_int = new symtab_entry("read_str");
+    ftbl.add_var(print_int, ttbl.lookup_type("Int"));
+
+    if( argc > 0 ) fin = fopen(argv[0], "r");
+    else fin = stdin;
+    ofstream os("out.s");
+    yyparse();
+    root->semant();
+    root->display();
+    root->cgen(os);
 }
 
-void Program_class::semant(){
-	for(int i = 0; i < funcs.size(); i++ ) {
-		funcs[i]->check();
-	}
+void Program_class::semant() {
+    for(int i = 0; i < funcs.size(); i++ ) {
+        funcs[i]->check();
+    }
 }
 
 void Block_class::check() {
-	for( int i = 0; i < exprs.size(); i++ ) exprs[i]->check();
-	type = exprs[exprs.size() - 1]->get_type();
+    if( exprs.size() == 0 ) type = ttbl.lookup_type("Int");
+    else {
+        for( int i = 0; i < exprs.size(); i++ ) exprs[i]->check();
+        type = exprs[exprs.size() - 1]->get_type();
+    }
 }

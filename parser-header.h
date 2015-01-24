@@ -70,14 +70,15 @@ union YYSTYPE
 #line 14 "parser.y" /* yacc.c:1909  */
 
 	Program prog;
-	Expression expr;	
+	Expression expr;
 	Block block_expr;
 	Formals formals;
 	Function func;
 	VecExpr vec_exp;
 	Symbol symbol;
+    int integer;
 
-#line 81 "parser.tab.h" /* yacc.c:1909  */
+#line 82 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

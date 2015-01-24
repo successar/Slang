@@ -25,7 +25,7 @@ char* string_buf_ptr;
 DIGIT	[0-9]
 ALPHA	[a-zA-Z]
 ALPHA_LOWER	[a-z]
-ALPHA_UPPER	[A-Z] 
+ALPHA_UPPER	[A-Z]
 
 LETK	[L|l][E|e][T|t]
 IFK	[I|i][F|f]
@@ -41,7 +41,7 @@ ASSIGNK	<-
 
 %%
 
-","	 { return (','); }
+","	     { return (','); }
 "+"      { return ('+'); }
 "-"      { return ('-'); }
 "*"      { return ('*'); }
@@ -54,7 +54,9 @@ ASSIGNK	<-
 "}"      { return ('}'); }
 "("      { return ('('); }
 ")"      { return (')'); }
-">"	 { return ('>'); }
+"["      { return ('['); }
+"]"      { return (']'); }
+">"	     { return ('>'); }
 {ASSIGNK} { return ASSIGN; }
 [ \t\r\f\v\n]+ {}
 
@@ -69,14 +71,14 @@ ASSIGNK	<-
 {ENDK}		  { return END; }
 
 <INITIAL>{\"  {
- string_buf_ptr = string_buf; 
-string_chars = 0;  
+ string_buf_ptr = string_buf;
+string_chars = 0;
 BEGIN(STRING); }
 }
 
 <STRING>{
 
-\"       { 
+\"       {
 *string_buf_ptr++ = '\0';
 yylval.symbol = new symtab_entry(string_buf);
 BEGIN(INITIAL);
@@ -157,9 +159,9 @@ BEGIN(ERR_STRING);
 
 [^\\\n\"\0]+   {
 char *yptr = yytext;
-while(*yptr){ 
+while(*yptr){
 if(string_chars != 1024){
-*string_buf_ptr++ = *yptr++; 
+*string_buf_ptr++ = *yptr++;
  string_chars++;}
 
 else {
@@ -179,8 +181,8 @@ BEGIN(INITIAL); }
 
 }
 
-  
-[0-9]+	 { yylval.symbol = new symtab_entry(yytext)  ; return INT_CONST; }
+
+[0-9]+	 { yylval.integer = atoi(yytext)  ; return INT_CONST; }
 [a-z][A-Za-z0-9_]+ { yylval.symbol = new symtab_entry(yytext) ; return OBJECTID; }
 [A-Z][A-Za-z0-9_]+ { yylval.symbol = ttbl.add_type(yytext); return TYPEID; }
 

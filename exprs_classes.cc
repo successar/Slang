@@ -15,7 +15,7 @@ class Binary : public Expression_class {
 class Unary : public Expression_class {
 	Expression e1;
 	int op;
-	public : 
+	public :
 	Unary(Expression arg_e1, int arg_op) : e1(arg_e1), op(arg_op) {};
 	EXPR_VALS
 };
@@ -33,7 +33,7 @@ class Assign : public Expression_class {
 class Call : public Expression_class {
 	Symbol name;
 	VecExpr args;
-	public : 
+	public :
 	Call(Symbol arg_name, VecExpr arg_args) : name(arg_name), args(arg_args) {}
 	EXPR_VALS
 };
@@ -44,7 +44,7 @@ class Let : public Expression_class {
 	Symbol var;
 	Symbol given_type;
 	Expression e1;
-	public : 
+	public :
 	Let(Symbol arg_var, Symbol arg_type, Expression arg_e1) : var(arg_var),e1(arg_e1), given_type(arg_type) {};
 	EXPR_VALS
 };
@@ -54,7 +54,7 @@ class Cond : public Expression_class {
 	Block etrue;
 	Block efalse;
 	public :
-	Cond(Expression arg_cond, Block arg_etrue, Block arg_efalse) : 
+	Cond(Expression arg_cond, Block arg_etrue, Block arg_efalse) :
 		cond(arg_cond), etrue(arg_etrue), efalse(arg_efalse) {};
 	EXPR_VALS
 };
@@ -65,7 +65,7 @@ class Loop : public Expression_class {
 	public :
 	Loop(Expression arg_cond, Block arg_e1) : cond(arg_cond), e1(arg_e1) {}
 	EXPR_VALS
-}; 
+};
 
 // **** String constant, Integer Constant, Object ****** //
 
@@ -84,8 +84,36 @@ class Object : public Expression_class {
 };
 
 class Int_const : public Expression_class {
-	Symbol value;
+	int value;
 	public :
-	Int_const(Symbol arg_value) : value(arg_value) {};
+	Int_const(int arg_value) : value(arg_value) {};
 	EXPR_VALS
+};
+
+// ***** Array Operations ****** //
+
+class Array_Let : public Expression_class {
+    Symbol var;
+    Symbol given_type;
+    int size;
+public :
+    Array_Let(Symbol arg_var, Symbol agiven, int arg_size) : given_type(agiven), var(arg_var), size(arg_size) {}
+    EXPR_VALS
+};
+
+class Array_Assign : public Expression_class {
+    Symbol var;
+    Expression pos;
+    Expression e1;
+public:
+    Array_Assign(Symbol avar, Expression apos, Expression ae1) : var(avar), pos(apos), e1(ae1) {}
+    EXPR_VALS
+};
+
+class Array_Access : public Expression_class {
+    Symbol var;
+    Expression pos;
+public :
+    Array_Access(Symbol avar, Expression apos) : var(avar), pos(apos) {}
+    EXPR_VALS
 };

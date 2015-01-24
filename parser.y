@@ -13,17 +13,19 @@ Program root = program();
 
 %union {
 	Program prog;
-	Expression expr;	
+	Expression expr;
 	Block block_expr;
 	Formals formals;
 	Function func;
 	VecExpr vec_exp;
 	Symbol symbol;
+    int integer;
 };
 
 %token LET 256 IF 257 THEN 258 ELSE 259 FI 260 END 261
 %token ASSIGN 262 WHILE 263 LOOP 264 DO 265
-%token <symbol> INT_CONST 271 OBJECTID 272 STR_CONST 273 TYPEID 274
+%token <integer> INT_CONST 271
+%token <symbol> OBJECTID 272 STR_CONST 273 TYPEID 274
 
 %type <prog> input
 %type <block_expr> block
@@ -69,7 +71,9 @@ arg :	exp	{ $$ = single_exp($1); }
 
 exp :	OBJECTID '(' args ')' 				{ $$ = call($1, $3); }
 	| LET TYPEID OBJECTID ASSIGN exp 			{ $$ = let($3, $2, $5); }
+	| LET TYPEID OBJECTID '[' INT_CONST ']'     { $$ = array_let($3, $2, $5); }
 	| OBJECTID ASSIGN exp 				{ $$ = assign($1, $3); }
+	| OBJECTID '[' exp ']' ASSIGN exp   { $$ = array_assign($1, $3, $6); }
 	| WHILE '(' exp ')' DO '{' block '}' LOOP 	{ $$ = loop($3, $7); }
 	| IF exp THEN '{' block '}' ELSE '{' block '}' FI { $$ = cond($2, $5, $9); }
 	| exp '+' exp					{ $$ = binary($1, $3, '+'); }
@@ -82,7 +86,8 @@ exp :	OBJECTID '(' args ')' 				{ $$ = call($1, $3); }
 	| exp '=' exp					{ $$ = binary($1, $3, '='); }
 	| '(' exp ')'					{ $$ = $2; }
 	| OBJECTID					{ $$ = object($1); }
-	| INT_CONST					{ $$ = int_const($1); }	
+    | OBJECTID '[' exp ']'      { $$ = array_access($1, $3); }
+	| INT_CONST					{ $$ = int_const($1); }
 	| STR_CONST					{ $$ = str_const($1); }
 
 ;
@@ -92,4 +97,4 @@ exp :	OBJECTID '(' args ')' 				{ $$ = call($1, $3); }
 void yyerror(char *s) {
 	printf("Error : %s\n", s);
 }
-		
+

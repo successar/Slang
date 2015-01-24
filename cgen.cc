@@ -11,7 +11,7 @@ int whiles = 0;
 
 int lookup_index(Symbol var) {
 	int index = vtbl->lookup_index(var);
-	if( index < curr ) return index + 3;			
+	if( index < curr ) return index + 3;
 	else return curr - index;
 }
 
@@ -29,7 +29,7 @@ void code_strings(ofstream& os) {
 }
 
 void Program_class::cgen(ofstream& os) {
-	os << "#Start of Code" << endl;	
+	os << "#Start of Code" << endl;
 	os << "\t.data" << endl;
 	os << "str:\t" << ".asciiz \"\\n\"" << endl;
 	code_strings(os);
@@ -83,7 +83,7 @@ void Unary::cgen(ostream& os) {
 void Let::cgen(ostream& os) {
 	int index = lookup_index(var);
 	e1->cgen(os);
-	store(ACC, index, FP, os);	
+	store(ACC, index, FP, os);
 }
 
 void Assign::cgen(ostream& os) {
@@ -103,12 +103,11 @@ void Cond::cgen(ostream& os) {
 	os << BRANCH << "endif" << ifbranch << endl;
 	os << "false" << ifbranch << ":" << endl;
 	efalse->cgen(os);
-	os << "endif" << ifbranch << ":" << endl;	
+	os << "endif" << ifbranch << ":" << endl;
 }
 
 void Int_const::cgen(ostream& os) {
-	char* str = value->string();
-	os << LI << ACC << ",\t" << str << endl;
+	os << LI << ACC << ",\t" << value << endl;
 }
 void Object::cgen(ostream& os) {
 	int index = lookup_index(var);
@@ -118,19 +117,19 @@ void Object::cgen(ostream& os) {
 void Loop::cgen(ostream& os) {
 	int w = whiles;
 	whiles++;
-	
+
 	os << "while" << w << ":" << endl;
 	cond->cgen(os);
 	os << BEQZ << ACC << ",\tloop" << w << endl;
 	e1->cgen(os);
 	os << BRANCH << "while" << w << endl;
-	os << "loop" << w << ":" << endl;		
+	os << "loop" << w << ":" << endl;
 }
 
 void Str_const::cgen(ostream& os) {
 	int index = stbl.lookup_index(value);
 	os << LA << ACC << ",\tstr" << index << endl;
-} 
+}
 
 void Call::cgen(ostream& os) {
 	args->cgen(os);
@@ -166,3 +165,25 @@ void Expressions_class::cgen(ostream& os) {
 void Formals_class::cgen(ostream& os) {
 }
 
+void Array_Let::cgen(ostream& os) {
+}
+
+void Array_Access::cgen(ostream& os) {
+    pos->cgen(os);
+    int index = lookup_index(var);
+    os << SUB << ACC << ",\t" << ACC << ",\t" << index << endl;
+    os << MUL << ACC << ",\t" << ACC << ",\t" << WORD_SIZE << endl;
+    os << SUB << ACC << ",\t" << FP << ",\t" << ACC << endl;
+	load(ACC, 0, ACC, os);
+}
+
+void Array_Assign::cgen(ostream& os) {
+    int index = lookup_index(var);
+	e1->cgen(os);
+	os << MOVE << T1 << ",\t" << ACC << endl;
+	pos->cgen(os);
+	os << SUB << ACC << ",\t" << ACC << ",\t" << index << endl;
+	os << MUL << ACC << ",\t" << ACC << ",\t" << WORD_SIZE << endl;
+	os << SUB << ACC << ",\t" << FP << ",\t" << ACC << endl;
+	store(T1, 0, ACC, os);
+}
