@@ -41,6 +41,8 @@ void Program_class::cgen(ofstream& os) {
 	code_print_int(os);
 	code_read_int(os);
 	code_print_str(os);
+	code_read_str(os);
+	code_sbrk(os);
 	os << "#End of code" << endl;
 }
 

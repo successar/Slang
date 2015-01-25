@@ -1,21 +1,21 @@
 #pragma once
 
 #define WORD_SIZE 4
-#define ZERO "$zero"		// Zero register 
-#define ACC  "$a0"		// Accumulator 
-#define A1   "$a1"		// For arguments to prim funcs 
-#define SELF "$s0"		// Ptr to self (callee saves) 
-#define T1   "$t1"		// Temporary 1 
-#define T2   "$t2"		// Temporary 2 
-#define T3   "$t3"		// Temporary 3 
-#define SP   "$sp"		// Stack pointer 
-#define FP   "$fp"		// Frame pointer 
-#define RA   "$ra"		// Return address 
+#define ZERO "$zero"		// Zero register
+#define ACC  "$a0"		// Accumulator
+#define A1   "$a1"		// For arguments to prim funcs
+#define SELF "$s0"		// Ptr to self (callee saves)
+#define T1   "$t1"		// Temporary 1
+#define T2   "$t2"		// Temporary 2
+#define T3   "$t3"		// Temporary 3
+#define SP   "$sp"		// Stack pointer
+#define FP   "$fp"		// Frame pointer
+#define RA   "$ra"		// Return address
 #define S1   "$s1"
 #define V0   "$v0"		// System Call
 
-#define JALR  "\tjalr\t"  
-#define JAL   "\tjal\t"                 
+#define JALR  "\tjalr\t"
+#define JAL   "\tjal\t"
 #define RET   "\tjr\t"RA"\t"
 #define SYSCALL	"\tsyscall\t"
 
@@ -107,5 +107,39 @@ void code_read_int(ostream& os) {
 	pop(os);
 	load(FP, 1, SP, os);
 	pop(os);
+	os << RET << endl;
+}
+
+void code_sbrk(ostream& os) {
+    os << "sbrk:" << endl;
+    push(FP, os);
+    push(RA, os);
+    os << MOVE << FP << ",\t" << SP << endl;
+	os << LI << V0 << ",\t" << 9 << endl;
+	os << LW << ACC << ",\t" << "12(" << FP << ")" << endl;
+	os << SYSCALL << endl;
+	os << MOVE << ACC << ",\t" << V0 << endl;
+	load(RA, 1, SP, os);
+	pop(os);
+	load(FP, 1, SP, os);
+	pop(os);
+	os << ADDIU << SP << ",\t" << SP << ",\t" << (WORD_SIZE) << endl;
+	os << RET << endl;
+}
+
+void code_read_str(ostream& os) {
+    os << "read_str:" << endl;
+	push(FP, os);
+	push(RA, os);
+	os << MOVE << FP << ",\t" << SP << endl;
+	os << LI << V0 << ",\t" << 8 << endl;
+	os << LW << ACC << ",\t" << "12(" << FP << ")" << endl;
+	os << LW << "$a1" << ",\t" << "16(" << FP << ")" << endl;
+	os << SYSCALL << endl;
+	load(RA, 1, SP, os);
+	pop(os);
+	load(FP, 1, SP, os);
+	pop(os);
+	os << ADDIU << SP << ",\t" << SP << ",\t" << (2 * WORD_SIZE) << endl;
 	os << RET << endl;
 }
