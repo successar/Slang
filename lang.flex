@@ -58,6 +58,7 @@ ASSIGNK	<-
 "["      { return ('['); }
 "]"      { return (']'); }
 ">"	     { return ('>'); }
+"."      { return ('.'); }
 {ASSIGNK} { return ASSIGN; }
 [ \t\r\f\v\n]+ {}
 

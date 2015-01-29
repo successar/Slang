@@ -42,6 +42,9 @@ class Array_Access;
 class Array_Let;
 class Array_Assign;
 
+class Struct_Access;
+class Struct_Assign;
+
 #include "basic_classes.cc"
 #include "exprs_classes.cc"
 
@@ -78,3 +81,6 @@ Expression object(Symbol var);
 Expression array_let(Symbol var, Symbol given, int size);
 Expression array_assign(Symbol var, Expression pos, Expression e1);
 Expression array_access(Symbol var, Expression pos);
+
+Expression struct_access(Expression e1, Symbol arg);
+Expression struct_assign(Expression e1, Symbol arg, Expression e2);

@@ -116,3 +116,21 @@ public :
     Array_Access(Symbol avar, Expression apos) : var(avar), pos(apos) {}
     EXPR_VALS
 };
+
+class Struct_Assign : public Expression_class {
+    Expression e1;
+    Symbol arg;
+    Expression e2;
+
+public:
+    Struct_Assign(Expression ae1, Symbol aarg, Expression ae2) : e1(ae1), arg(aarg), e2(ae2) {}
+    EXPR_VALS
+};
+
+class Struct_Access : public Expression_class {
+    Expression e1;
+    Symbol arg;
+public :
+    Struct_Access(Expression ae1, Symbol aarg) : e1(ae1), arg(aarg) {}
+    EXPR_VALS
+};

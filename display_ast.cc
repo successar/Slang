@@ -186,3 +186,26 @@ void Array_Access::display(int l) {
     cout << "Access : " << var->string() << " on positon : " << endl;
     pos->display(l + 1);
 }
+
+//******* Struct access, assign **********//
+
+void Struct_Access::display(int l) {
+    for(int i = 0; i < l; i++) cout << '\t';
+    cout << "## Type : " << type->string() << endl;
+
+    for(int i = 0; i < l; i++) cout << '\t';
+    cout << "Access : " << arg->string() << " of " << endl;
+    e1->display(l + 1);
+}
+
+void Struct_Assign::display(int l) {
+    for(int i = 0; i < l; i++) cout << '\t';
+    cout << "## Type : " << type->string() << endl;
+
+    for(int i = 0; i < l; i++) cout << '\t';
+    cout << "Assign : " << arg->string() << " of " << endl;
+    e1->display(l + 1);
+    for(int i = 0; i < l; i++) cout << '\t';
+    cout << "Expression : " << endl;
+    e2->display(l + 1);
+}

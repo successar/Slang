@@ -9,6 +9,7 @@ str_table stbl;
 var_table ftbl;
 var_table* vtbl = NULL;
 type_table ttbl;
+struct_table ctbl;
 
 int main(int argc, char** argv) {
     ++argv;
@@ -46,6 +47,7 @@ void Program_class::semant() {
     for(int i = 0; i < structs.size(); i++ ) {
         structs[i]->check();
     }
+
     for(int i = 0; i < funcs.size(); i++ ) {
         funcs[i]->check();
     }

@@ -30,6 +30,9 @@ Expression array_let(Symbol var, Symbol given, int size) { return new Array_Let(
 Expression array_assign(Symbol var, Expression pos, Expression e1) { return new Array_Assign(var, pos, e1); }
 Expression array_access(Symbol var, Expression pos){ return new Array_Access(var, pos); }
 
+Expression struct_access(Expression e1, Symbol arg) { return new Struct_Access(e1, arg); }
+Expression struct_assign(Expression e1, Symbol arg, Expression e2) { return new Struct_Assign(e1, arg, e2); }
+
 Function function(Symbol name, Symbol ret_type, Formals args, Block blk) {
 	return new Function_class(name, ret_type, args, blk);
 }

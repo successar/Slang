@@ -81,6 +81,7 @@ public:
 class Struct_class {
     Symbol name;
     Formals args;
+    var_table vars;
 public :
     Struct_class(Symbol arg_name, Formals arg_args) : name(arg_name), args(arg_args) {}
     Symbol get_name() {
