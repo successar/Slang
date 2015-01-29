@@ -6,15 +6,10 @@ class var_table {
 	protected:
 	vector<Symbol> vars;
 	vector<Symbol> types;
-	vector<int> sizes;
-	int tot_size;
 	public :
-    var_table() : tot_size(0) {}
-	void add_var(Symbol var, Symbol type, int size = 1) {
+	void add_var(Symbol var, Symbol type) {
 		vars.push_back(var);
 		types.push_back(type);
-		sizes.push_back(size);
-		tot_size += size;
 	}
 
 	Symbol lookup_var(Symbol sym) {
@@ -32,14 +27,12 @@ class var_table {
 	}
 
 	int size() {
-        return tot_size;
+        return vars.size();
     }
 
 	int lookup_index(Symbol sym) {
-	    int index = 0;
 		for(int i = 0; i < vars.size(); i++ ) {
-			if( strcasecmp(sym->string(), vars[i]->string()) == 0) return index;
-			else index += sizes[i];
+			if( strcasecmp(sym->string(), vars[i]->string()) == 0) return i;
 		}
 		return -1;
 	}

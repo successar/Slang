@@ -43,9 +43,8 @@ class Call : public Expression_class {
 class Let : public Expression_class {
 	Symbol var;
 	Symbol given_type;
-	Expression e1;
 	public :
-	Let(Symbol arg_var, Symbol arg_type, Expression arg_e1) : var(arg_var),e1(arg_e1), given_type(arg_type) {};
+	Let(Symbol arg_var, Symbol arg_type) : var(arg_var), given_type(arg_type) {};
 	EXPR_VALS
 };
 

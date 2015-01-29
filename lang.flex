@@ -36,6 +36,7 @@ WHILEK	[W|w][H|h][I|i][L|l][E|e]
 LOOPK	[L|l][O|o][O|o][P|p]
 DOK	[D|d][O|o]
 ENDK	[E|e][N|n][D|d]
+STRUCTK  [S|s][T|t][R|r][U|u][C|c][T|t]
 
 ASSIGNK	<-
 
@@ -69,6 +70,7 @@ ASSIGNK	<-
 {LOOPK}		  { return LOOP; }
 {DOK}		  { return DO; }
 {ENDK}		  { return END; }
+{STRUCTK}     { return STRUCT; }
 
 <INITIAL>{\"  {
  string_buf_ptr = string_buf;

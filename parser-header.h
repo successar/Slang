@@ -55,6 +55,7 @@ extern int yydebug;
     WHILE = 263,
     LOOP = 264,
     DO = 265,
+    STRUCT = 266,
     INT_CONST = 271,
     OBJECTID = 272,
     STR_CONST = 273,
@@ -74,11 +75,12 @@ union YYSTYPE
 	Block block_expr;
 	Formals formals;
 	Function func;
+	Struct str;
 	VecExpr vec_exp;
 	Symbol symbol;
     int integer;
 
-#line 82 "parser.tab.h" /* yacc.c:1909  */
+#line 84 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

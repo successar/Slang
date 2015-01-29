@@ -1,9 +1,12 @@
 INT main(INT amt) {
 
-LET Int a1 <- 0;
-LET Int input <- 0;
+LET Int a1;
+LET Int input;
 
 LET Int arr[10];
+
+a1 <- 0;
+input <- 0;
 
 while ( a1 < 10 ) DO {
     print_str("Enter the number : ");
@@ -13,12 +16,15 @@ while ( a1 < 10 ) DO {
 } LOOP;
 print_str("\nSelection Sort : ");
 
-LET Int temp <- 0;
-LET Int a2 <- 0;
+LET Int temp;
+LET Int a2;
+LET Int minpos;
+
+a2 <- 0;
 
 while ( a2 < 9 ) DO {
     a1 <- a2;
-    LET Int minpos <- a2;
+    minpos <- a2;
     while ( a1 < 10 ) DO {
         if ( arr[a1] < arr[minpos] ) THEN {  minpos <- a1; } ELSE { ; } FI;
         a1 <- a1 + 1;

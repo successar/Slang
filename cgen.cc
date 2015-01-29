@@ -5,9 +5,12 @@ using namespace std;
 extern var_table ftbl;
 extern str_table stbl;
 extern var_table* vtbl;
+extern type_table ttbl;
 int curr;
 int ifs = 0;
 int whiles = 0;
+
+#define basic_type ttbl.lookup_type("Int")
 
 int lookup_index(Symbol var) {
 	int index = vtbl->lookup_index(var);
@@ -83,9 +86,8 @@ void Unary::cgen(ostream& os) {
 }
 
 void Let::cgen(ostream& os) {
-	int index = lookup_index(var);
-	e1->cgen(os);
-	store(ACC, index, FP, os);
+    if( type != basic_type ) {
+    }
 }
 
 void Assign::cgen(ostream& os) {
@@ -168,15 +170,21 @@ void Formals_class::cgen(ostream& os) {
 }
 
 void Array_Let::cgen(ostream& os) {
+    int index = lookup_index(var);
+    os << LI << ACC << ",\t" << size * WORD_SIZE << endl;
+    os << LI << V0 << ",\t" << 9 << endl;
+    os << SYSCALL << endl;
+    store(V0, index, FP , os);
+    os << MOVE << ACC << ",\t" << V0 << endl;
 }
 
 void Array_Access::cgen(ostream& os) {
     pos->cgen(os);
     int index = lookup_index(var);
-    os << SUB << ACC << ",\t" << ACC << ",\t" << index << endl;
-    os << MUL << ACC << ",\t" << ACC << ",\t" << WORD_SIZE << endl;
-    os << SUB << ACC << ",\t" << FP << ",\t" << ACC << endl;
-	load(ACC, 0, ACC, os);
+    load(T1, index, FP, os);
+    os << "\tsll\t" << ACC << ",\t" << ACC << ",\t" << 2 << endl;
+    os << ADD << ACC << ",\t" << ACC << ",\t" << T1 << endl;
+    load(ACC, 0, ACC, os);
 }
 
 void Array_Assign::cgen(ostream& os) {
@@ -184,8 +192,8 @@ void Array_Assign::cgen(ostream& os) {
 	e1->cgen(os);
 	os << MOVE << T1 << ",\t" << ACC << endl;
 	pos->cgen(os);
-	os << SUB << ACC << ",\t" << ACC << ",\t" << index << endl;
-	os << MUL << ACC << ",\t" << ACC << ",\t" << WORD_SIZE << endl;
-	os << SUB << ACC << ",\t" << FP << ",\t" << ACC << endl;
+	load(T2, index, FP, os);
+    os << "\tsll\t" << ACC << ",\t" << ACC << ",\t" << 2 << endl;
+    os << ADD << ACC << ",\t" << ACC << ",\t" << T2 << endl;
 	store(T1, 0, ACC, os);
 }

@@ -7,7 +7,7 @@ extern Program root;
 extern void yyparse();
 str_table stbl;
 var_table ftbl;
-var_table* vtbl;
+var_table* vtbl = NULL;
 type_table ttbl;
 
 int main(int argc, char** argv) {
@@ -21,10 +21,13 @@ int main(int argc, char** argv) {
     ftbl.add_var(print_int, ttbl.lookup_type("Int"));
 
     Symbol print_str = new symtab_entry("print_str");
-    ftbl.add_var(print_int, ttbl.lookup_type("Str"));
+    ftbl.add_var(print_str, ttbl.lookup_type("Str"));
 
-    Symbol read_int = new symtab_entry("read_str");
-    ftbl.add_var(print_int, ttbl.lookup_type("Int"));
+    Symbol read_str = new symtab_entry("read_str");
+    ftbl.add_var(read_str, ttbl.lookup_type("Str"));
+
+    Symbol read_int = new symtab_entry("read_int");
+    ftbl.add_var(read_int, ttbl.lookup_type("Int"));
 
     if( argc > 0 ) fin = fopen(argv[0], "r");
     else fin = stdin;
@@ -36,6 +39,13 @@ int main(int argc, char** argv) {
 }
 
 void Program_class::semant() {
+    for(int i = 0; i < structs.size(); i++ ) {
+        ttbl.add_type(structs[i]->get_name()->string());
+    }
+
+    for(int i = 0; i < structs.size(); i++ ) {
+        structs[i]->check();
+    }
     for(int i = 0; i < funcs.size(); i++ ) {
         funcs[i]->check();
     }
