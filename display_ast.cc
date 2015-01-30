@@ -70,6 +70,13 @@ void Unary::display(int l) {
     e1->display(l + 1);
 }
 
+void Sizeof::display(int l) {
+    for(int i = 0; i < l; i++) cout << '\t';
+    cout << "## Type : " << type->string() << endl;
+    for(int i = 0; i < l; i++) cout << '\t';
+    cout << "Sizeof : " << given_type->string() << endl;
+}
+
 // ****** Assign , Call ******//
 
 void Assign::display(int l) {

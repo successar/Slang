@@ -24,7 +24,7 @@ Program root = program();
 };
 
 %token LET 256 IF 257 THEN 258 ELSE 259 FI 260 END 261
-%token ASSIGN 262 WHILE 263 LOOP 264 DO 265 STRUCT 266
+%token ASSIGN 262 WHILE 263 LOOP 264 DO 265 STRUCT 266 SIZEOF 267
 %token <integer> INT_CONST 271
 %token <symbol> OBJECTID 272 STR_CONST 273 TYPEID 274
 
@@ -96,6 +96,7 @@ exp :	OBJECTID '(' args ')' 				            { $$ = call($1, $3); }
 	|   exp '>' exp					{ $$ = binary($3, $1, '<'); }
 	|   exp '=' exp					{ $$ = binary($1, $3, '='); }
 	|   '(' exp ')'					{ $$ = $2; }
+	|   SIZEOF '(' TYPEID ')'       { $$ = size_of($3); }
 	|   OBJECTID					{ $$ = object($1); }
     |   OBJECTID '[' exp ']'        { $$ = array_access($1, $3); }
     |   exp '.' OBJECTID            { $$ = struct_access($1, $3); }

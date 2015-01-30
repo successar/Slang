@@ -55,8 +55,8 @@ void Block_class::cgen(ostream& os) {
 }
 
 void Expression_class::cgen(ostream& os) {
-    os << LI << V0 << ",\t" << 4 << endl;
-    os << LA << ACC << ",\t" << "str" << endl;
+    os << LI << V0 << ", " << 4 << endl;
+    os << LA << ACC << ", " << "str" << endl;
     os << SYSCALL << endl;
 }
 
@@ -87,7 +87,7 @@ void Binary::cgen(ostream& os) {
         break;
     }
 
-    os << ACC << ",\t" << T1 << ",\t" << ACC << endl;
+    os << ACC << ", " << T1 << ", " << ACC << endl;
 }
 
 void Unary::cgen(ostream& os) {
@@ -97,19 +97,18 @@ void Unary::cgen(ostream& os) {
         os << NEG;
         break;
     }
-    os << ACC << ",\t" << ACC << endl;
+    os << ACC << ", " << ACC << endl;
+}
+
+void Sizeof::cgen(ostream& os) {
+    var_table* local = ctbl.lookup_vtbl(given_type);
+    int size;
+    if( local != NULL ) size = local->size();
+    else size = 1;
+    os << LI << ACC << ", " << WORD_SIZE * size << endl;
 }
 
 void Let::cgen(ostream& os) {
-    var_table* local = ctbl.lookup_vtbl(given_type);
-    if( local == NULL ) return;
-    int size = local->size();
-    int index = lookup_index(var);
-    os << LI << ACC << ",\t" << size * WORD_SIZE << endl;
-    os << LI << V0 << ",\t" << 9 << endl;
-    os << SYSCALL << endl;
-    store(V0, index, FP , os);
-    os << MOVE << ACC << ",\t" << V0 << endl;
 }
 
 void Assign::cgen(ostream& os) {
@@ -123,7 +122,7 @@ void Cond::cgen(ostream& os) {
     ifs++;
 
     cond->cgen(os);
-    os << BEQZ << ACC << ",\tfalse" << ifbranch << endl;
+    os << BEQZ << ACC << ", false" << ifbranch << endl;
     os << "true" << ifbranch << ":" << endl;
     etrue->cgen(os);
     os << BRANCH << "endif" << ifbranch << endl;
@@ -133,7 +132,7 @@ void Cond::cgen(ostream& os) {
 }
 
 void Int_const::cgen(ostream& os) {
-    os << LI << ACC << ",\t" << value << endl;
+    os << LI << ACC << ", " << value << endl;
 }
 void Object::cgen(ostream& os) {
     int index = lookup_index(var);
@@ -146,7 +145,7 @@ void Loop::cgen(ostream& os) {
 
     os << "while" << w << ":" << endl;
     cond->cgen(os);
-    os << BEQZ << ACC << ",\tloop" << w << endl;
+    os << BEQZ << ACC << ", loop" << w << endl;
     e1->cgen(os);
     os << BRANCH << "while" << w << endl;
     os << "loop" << w << ":" << endl;
@@ -154,7 +153,7 @@ void Loop::cgen(ostream& os) {
 
 void Str_const::cgen(ostream& os) {
     int index = stbl.lookup_index(value);
-    os << LA << ACC << ",\tstr" << index << endl;
+    os << LA << ACC << ", str" << index << endl;
 }
 
 void Call::cgen(ostream& os) {
@@ -169,15 +168,15 @@ void Function_class::cgen(ostream& os) {
     push(FP, os);
     push(RA, os);
     int local = vtbl->size() - args->size();
-    os << MOVE << FP << ",\t" << SP << endl;
-    os << ADDIU << SP << ",\t" << SP << ",\t" << -(WORD_SIZE * local) << endl;
+    os << MOVE << FP << ", " << SP << endl;
+    os << ADDIU << SP << ", " << SP << ", " << -(WORD_SIZE * local) << endl;
     blk->cgen(os);
-    os << ADDIU << SP << ",\t" << SP << ",\t" << (WORD_SIZE * local) << endl;
+    os << ADDIU << SP << ", " << SP << ", " << (WORD_SIZE * local) << endl;
     load(RA, 1, SP, os);
     pop(os);
     load(FP, 1, SP, os);
     pop(os);
-    os << ADDIU << SP << ",\t" << SP << ",\t" << (WORD_SIZE * args->size()) << endl;
+    os << ADDIU << SP << ", " << SP << ", " << (WORD_SIZE * args->size()) << endl;
     os << RET << endl;
 }
 
@@ -193,30 +192,30 @@ void Formals_class::cgen(ostream& os) {
 
 void Array_Let::cgen(ostream& os) {
     int index = lookup_index(var);
-    os << LI << ACC << ",\t" << size * WORD_SIZE << endl;
-    os << LI << V0 << ",\t" << 9 << endl;
+    os << LI << ACC << ", " << size * WORD_SIZE << endl;
+    os << LI << V0 << ", " << 9 << endl;
     os << SYSCALL << endl;
     store(V0, index, FP , os);
-    os << MOVE << ACC << ",\t" << V0 << endl;
+    os << MOVE << ACC << ", " << V0 << endl;
 }
 
 void Array_Access::cgen(ostream& os) {
     pos->cgen(os);
     int index = lookup_index(var);
     load(T1, index, FP, os);
-    os << "\tsll\t" << ACC << ",\t" << ACC << ",\t" << 2 << endl;
-    os << ADD << ACC << ",\t" << ACC << ",\t" << T1 << endl;
+    os << "\tsll\t" << ACC << ", " << ACC << ", " << 2 << endl;
+    os << ADD << ACC << ", " << ACC << ", " << T1 << endl;
     load(ACC, 0, ACC, os);
 }
 
 void Array_Assign::cgen(ostream& os) {
     int index = lookup_index(var);
     e1->cgen(os);
-    os << MOVE << T1 << ",\t" << ACC << endl;
+    os << MOVE << T1 << ", " << ACC << endl;
     pos->cgen(os);
     load(T2, index, FP, os);
-    os << "\tsll\t" << ACC << ",\t" << ACC << ",\t" << 2 << endl;
-    os << ADD << ACC << ",\t" << ACC << ",\t" << T2 << endl;
+    os << "\tsll\t" << ACC << ", " << ACC << ", " << 2 << endl;
+    os << ADD << ACC << ", " << ACC << ", " << T2 << endl;
     store(T1, 0, ACC, os);
 }
 
@@ -230,7 +229,7 @@ void Struct_Access::cgen(ostream& os) {
 
 void Struct_Assign::cgen(ostream& os) {
     e2->cgen(os);
-    os << MOVE << T1 << ",\t" << ACC << endl;
+    os << MOVE << T1 << ", " << ACC << endl;
     e1->cgen(os);
     var_table* local = ctbl.lookup_vtbl(e1->get_type());
     int index = local->lookup_index(arg);

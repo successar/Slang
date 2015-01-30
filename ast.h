@@ -29,6 +29,7 @@ typedef Struct_class* Struct;
 
 class Binary;
 class Unary;
+class Sizeof;
 class Assign;
 class Call;
 class Let;
@@ -69,6 +70,7 @@ Expression assign(Symbol var, Expression e1);
 
 Expression binary(Expression e1, Expression e2, int op);
 Expression unary(Expression e1, int op);
+Expression size_of(Symbol type);
 
 Expression let(Symbol var, Symbol type);
 Expression cond(Expression cond, Block etrue, Block efalse);

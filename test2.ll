@@ -29,9 +29,17 @@ Int read_acc(Account acc) {
 END
 
 Int main(Int amt) {
-    LET Account acc;
-    acc.name <- sbrk(16);
-    read_acc(acc);
-    print(acc);
+    LET Account acc[10];
+    LET Account acc_t;
+    LET Int a1;
+    a1 <- 0;
+    while( a1 < 10 ) DO {
+        acc[a1] <- sbrk(sizeof(Account));
+        acc_t <- acc[a1];
+        acc_t.name <- sbrk(16);
+        read_acc(acc_t);
+        print(acc_t);
+        a1 <- a1 + 1;
+    } LOOP;
 }
 END

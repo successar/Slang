@@ -56,6 +56,7 @@ extern int yydebug;
     LOOP = 264,
     DO = 265,
     STRUCT = 266,
+    SIZEOF = 267,
     INT_CONST = 271,
     OBJECTID = 272,
     STR_CONST = 273,
@@ -80,7 +81,7 @@ union YYSTYPE
 	Symbol symbol;
     int integer;
 
-#line 84 "parser.tab.h" /* yacc.c:1909  */
+#line 85 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

@@ -51,6 +51,11 @@ void Unary::check() {
     type = e1->get_type();
 }
 
+void Sizeof::check() {
+    type = ttbl.lookup_type("int");
+    if( ttbl.lookup_type(given_type->string()) == NULL ) cout << "No such Type" << endl;
+}
+
 // ****** Condition, Loop, Let *****//
 
 void Cond::check() {

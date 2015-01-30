@@ -37,6 +37,7 @@ LOOPK	[L|l][O|o][O|o][P|p]
 DOK	[D|d][O|o]
 ENDK	[E|e][N|n][D|d]
 STRUCTK  [S|s][T|t][R|r][U|u][C|c][T|t]
+SIZEOFK   "sizeof"
 
 ASSIGNK	<-
 
@@ -72,6 +73,7 @@ ASSIGNK	<-
 {DOK}		  { return DO; }
 {ENDK}		  { return END; }
 {STRUCTK}     { return STRUCT; }
+{SIZEOFK}       { return SIZEOF; }
 
 <INITIAL>{\"  {
  string_buf_ptr = string_buf;

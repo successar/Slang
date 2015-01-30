@@ -14,6 +14,7 @@ Block single_block(Expression e1) {
 
 Expression binary(Expression e1, Expression e2, int op) { Binary* expr = new Binary(e1, e2, op); return expr; }
 Expression unary(Expression e1, int op) { Unary* expr = new Unary(e1, op); return expr; }
+Expression size_of(Symbol type) { return new Sizeof(type); }
 
 Expression assign(Symbol var, Expression e1) { Assign* expr = new Assign(var, e1); return expr; }
 Expression call(Symbol name, VecExpr args) { Call* c = new Call(name, args); return c; }

@@ -20,6 +20,13 @@ class Unary : public Expression_class {
 	EXPR_VALS
 };
 
+class Sizeof : public Expression_class {
+    Symbol given_type;
+public:
+    Sizeof(Symbol arg_type) : given_type(arg_type) {}
+    EXPR_VALS
+};
+
 /////// ******** Assign, Call *********** ///////
 
 class Assign : public Expression_class {
