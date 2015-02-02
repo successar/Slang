@@ -2,7 +2,7 @@ struct Account {
     Int acc_no,
     Str name,
     Int balance
-} END
+}
 
 Int print(Account acc) {
     print_str("Account info : ");
@@ -15,7 +15,7 @@ Int print(Account acc) {
     print_str("\n");
     0;
 }
-END
+
 
 Int read_acc(Account acc) {
     print_str("Account number : ");
@@ -26,14 +26,14 @@ Int read_acc(Account acc) {
     acc.balance <- read_int();
     0;
 }
-END
+
 
 Int main(Int amt) {
-    LET Account acc[10];
-    LET Account acc_t;
-    LET Int a1;
+    Account acc[10];
+    Account acc_t;
+    Int a1;
     a1 <- 0;
-    while( a1 < 10 ) DO {
+    while( a1 < 10 ) {
         acc[a1] <- sbrk(sizeof(Account));
         acc_t <- acc[a1];
         acc_t.name <- sbrk(16);
@@ -42,4 +42,4 @@ Int main(Int amt) {
         a1 <- a1 + 1;
     } LOOP;
 }
-END
+

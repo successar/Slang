@@ -1,10 +1,12 @@
 #include "ast.h"
 #include <stdio.h>
+#include <cstdlib>
 using namespace std;
 
 FILE* fin;
 extern Program root;
 extern void yyparse();
+extern int errs;
 str_table stbl;
 var_table ftbl;
 var_table* vtbl = NULL;
@@ -18,6 +20,12 @@ int main(int argc, char** argv) {
     ttbl.add_type("Str");
     ttbl.add_type("Int");
 
+    if( argc > 0 ) fin = fopen(argv[0], "r");
+    else fin = stdin;
+    ofstream os("out.s");
+    yyparse();
+    if( errs != 0 ) { cout << "Exiting due to lex/parse errors\n" ; exit(1); }
+
     Symbol print_int = new symtab_entry("print_int");
     ftbl.add_var(print_int, ttbl.lookup_type("Int"));
 
@@ -30,10 +38,6 @@ int main(int argc, char** argv) {
     Symbol read_int = new symtab_entry("read_int");
     ftbl.add_var(read_int, ttbl.lookup_type("Int"));
 
-    if( argc > 0 ) fin = fopen(argv[0], "r");
-    else fin = stdin;
-    ofstream os("out.s");
-    yyparse();
     root->semant();
     root->display();
     root->cgen(os);

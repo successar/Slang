@@ -19,4 +19,4 @@ lexer-tab.cc : lang.flex parser-header.h
 	mv -f lex.yy.c lexer-tab.cc
 
 clean :
-	rm slang ${OBJS} parser-tab.cc lexer-tab.cc *~
+	rm slang ${OBJS} parser-tab.cc parser-header.h lexer-tab.cc *~

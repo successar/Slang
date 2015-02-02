@@ -8,6 +8,7 @@ using namespace std;
 
 extern FILE* fin;
 extern type_table ttbl;
+int lineno = 1;
 
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
@@ -61,7 +62,7 @@ ASSIGNK	<-
 ">"	     { return ('>'); }
 "."      { return ('.'); }
 {ASSIGNK} { return ASSIGN; }
-[ \t\r\f\v\n]+ {}
+[ \t\r\f\v]+ {}
 
 {ELSEK}           { return ELSE; }
 {FIK}             { return FI; }
@@ -101,6 +102,7 @@ BEGIN(ERR_STRING);
 
 \n   {
 printf("Unterminated string constant");
+lineno++;
 BEGIN(INITIAL);
 }
 
@@ -181,7 +183,7 @@ BEGIN(INITIAL); }
 
 <ERR_STRING>{
 
-[^\n\"]*\n    BEGIN(INITIAL);
+[^\n\"]*\n    lineno++; BEGIN(INITIAL);
 [^\n\"]*\"    BEGIN(INITIAL);
 
 }
@@ -190,6 +192,8 @@ BEGIN(INITIAL); }
 [0-9]+	 { yylval.integer = atoi(yytext)  ; return INT_CONST; }
 [a-z][A-Za-z0-9_]+ { yylval.symbol = new symtab_entry(yytext) ; return OBJECTID; }
 [A-Z][A-Za-z0-9_]+ { yylval.symbol = ttbl.add_type(yytext); return TYPEID; }
+
+\n  lineno++;
 
 . { cout << "ERROR : " << yytext; }
 %%

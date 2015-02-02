@@ -5,10 +5,16 @@
 #include "ast.h"
 using namespace std;
 
+extern int lineno;
+
+#define YYLTYPE int
+#define yylloc lineno
+
 extern int yylex();
 extern FILE* fin;
 void yyerror(char*);
 Program root = program();
+int errs = 0;
 %}
 
 %union {
@@ -54,13 +60,13 @@ structs : struct        { root->append_struct($1); }
     |   structs struct  { root->append_struct($2); }
 ;
 
-struct : STRUCT TYPEID '{' formals '}' END    { $$ = structt($2, $4); }
+struct : STRUCT TYPEID '{' formals '}'    { $$ = structt($2, $4); }
 
 functions : func	    { root->append_function($1); }
 	|   functions func	{ root->append_function($2); }
 ;
 
-func : TYPEID OBJECTID '(' formals ')' '{' block '}' END	{ $$ = function($2, $1, $4, $7); }
+func : TYPEID OBJECTID '(' formals ')' '{' block '}'	{ $$ = function($2, $1, $4, $7); }
 ;
 
 formals : TYPEID OBJECTID	        { $$ = single_formal($2, $1); }
@@ -80,12 +86,12 @@ arg :	exp	        { $$ = single_exp($1); }
 	|   arg ',' exp	{ $$ = append_exp($1, $3); }
 
 exp :	OBJECTID '(' args ')' 				            { $$ = call($1, $3); }
-    |   LET TYPEID OBJECTID                             { $$ = let($3, $2); }
-	|   LET TYPEID OBJECTID '[' INT_CONST ']'           { $$ = array_let($3, $2, $5); }
+    |   TYPEID OBJECTID                                 { $$ = let($2, $1); }
+	|   TYPEID OBJECTID '[' INT_CONST ']'               { $$ = array_let($2, $1, $4); }
 	|   OBJECTID ASSIGN exp 				            { $$ = assign($1, $3); }
 	|   OBJECTID '[' exp ']' ASSIGN exp                 { $$ = array_assign($1, $3, $6); }
 	|   exp '.' OBJECTID ASSIGN exp                     { $$ = struct_assign($1, $3, $5); }
-	|   WHILE '(' exp ')' DO '{' block '}' LOOP 	    { $$ = loop($3, $7); }
+	|   WHILE '(' exp ')' '{' block '}'	LOOP            { $$ = loop($3, $6); }
 	|   IF exp THEN '{' block '}' ELSE '{' block '}' FI { $$ = cond($2, $5, $9); }
 	|   exp '+' exp					{ $$ = binary($1, $3, '+'); }
 	|   exp '-' exp					{ $$ = binary($1, $3, '-'); }
@@ -102,11 +108,13 @@ exp :	OBJECTID '(' args ')' 				            { $$ = call($1, $3); }
     |   exp '.' OBJECTID            { $$ = struct_access($1, $3); }
 	|   INT_CONST					{ $$ = int_const($1); }
 	|   STR_CONST					{ $$ = str_const($1); }
+	|   error
 ;
 
 %%
 
 void yyerror(char *s) {
-	printf("Error : %s\n", s);
+	printf("%s at line : %d\n", s, lineno);
+	errs++;
 }
 
